@@ -15,14 +15,14 @@ function getBooksBorrowedCount(books) { let booksCheckedOut = books.filter(
 
 
 function getMostCommonGenres(books) {
-  let map = {};
- books.forEach((num) => {
+ const map = books.reduce((map,num) => {
   if (map[num.genre]) {
    map[num.genre]++;
   } else {
    map[num.genre] = 1;
   }
- });
+  return map;
+ },{});
  return Object.entries(map)
   .map(([name, count]) => {
    return {
@@ -58,9 +58,12 @@ function getMostPopularAuthors(books, authors) {
    });
    result.push(theAuthor);
   });
-  return result.sort((a, b) => b.count - a.count).slice(0, 5);
+  return sortAndSlice(result)
  }
 
+ function sortAndSlice(array) {
+  return array.sort((a, b) => b.count - a.count).slice(0, 5);
+ }
 module.exports = {
   getTotalBooksCount,
   getTotalAccountsCount,
